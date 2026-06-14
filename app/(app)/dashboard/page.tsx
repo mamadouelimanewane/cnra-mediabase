@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { formatNumber } from "@/lib/utils"
 import { Tv, Radio, Globe, Users, Building2, TrendingUp, Award, AlertTriangle } from "lucide-react"
@@ -12,7 +12,7 @@ interface StatsAudience { media_nom: string; audience_hebdo: number; parts_march
 const TYPE_COLORS = { television: "#1A3A6B", radio: "#C9A84C", en_ligne: "#166534" }
 
 export default function DashboardPage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [medias, setMedias] = useState<Media[]>([])
   const [audiences, setAudiences] = useState<StatsAudience[]>([])
   const [nbJournalistes, setNbJournalistes] = useState(0)
@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     async function load() {
       const [m, a, j, g] = await Promise.all([
         supabase.from("medias").select("id,nom,type,statut,audience_estimee,couverture"),
@@ -27,6 +28,10 @@ export default function DashboardPage() {
         supabase.from("journalistes").select("id", { count: "exact", head: true }),
         supabase.from("groupes_media").select("id", { count: "exact", head: true }),
       ])
+      console.log("medias:", m.data, m.error)
+      console.log("audiences:", a.data, a.error)
+      console.log("journalistes count:", j.count, j.error)
+      console.log("groupes count:", g.count, g.error)
       setMedias((m.data ?? []) as Media[])
       setAudiences((a.data ?? []).map((d: Record<string, unknown>) => ({
         media_nom: (d.media_nom as { nom: string })?.nom ?? "?",

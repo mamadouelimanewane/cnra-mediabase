@@ -1,6 +1,6 @@
-"use client"
+﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { ClipboardCheck, CheckCircle, XCircle, AlertTriangle, TrendingUp } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
@@ -16,12 +16,13 @@ const RESULTAT_COLORS: Record<string, string> = {
 }
 
 export default function AuditsPage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [audits, setAudits] = useState<Audit[]>([])
   const [filterResultat, setFilterResultat] = useState("tous")
   const [filterType, setFilterType] = useState("tous")
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     supabase.from("audits_media")
       .select("id,date_audit,type_audit,resultat,score,observations,recommandations,auditeur,medias:media_id(nom,type)")
       .order("date_audit", { ascending: false })
@@ -175,3 +176,4 @@ export default function AuditsPage() {
     </div>
   )
 }
+

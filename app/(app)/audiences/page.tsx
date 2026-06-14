@@ -1,6 +1,6 @@
-"use client"
+﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { TrendingUp, TrendingDown, BarChart2 } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend, PieChart, Pie, Cell } from "recharts"
@@ -13,12 +13,13 @@ interface Stat {
 }
 
 export default function AudiencesPage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [stats, setStats] = useState<Stat[]>([])
   const [filterAnnee, setFilterAnnee] = useState("2024")
   const [filterTrimestre, setFilterTrimestre] = useState("3")
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     supabase.from("stats_audience")
       .select("id,trimestre,annee,audience_hebdo,parts_marche,reach_mensuel,taux_fidelite,medias:media_id(nom,type)")
       .order("annee").order("trimestre")
@@ -190,3 +191,4 @@ export default function AudiencesPage() {
     </div>
   )
 }
+

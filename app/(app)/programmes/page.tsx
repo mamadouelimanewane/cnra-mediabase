@@ -1,6 +1,6 @@
-"use client"
+﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { BookOpen, Clock, Tv, Radio, Globe } from "lucide-react"
 
@@ -17,12 +17,13 @@ const CATEGORIE_COLORS: Record<string, string> = {
 }
 
 export default function ProgrammesPage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [programmes, setProgrammes] = useState<Programme[]>([])
   const [filterJour, setFilterJour] = useState("tous")
   const [filterCat, setFilterCat] = useState("tous")
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     supabase.from("programmes")
       .select("id,nom,jour_semaine,heure_debut,heure_fin,categorie,duree_minutes,description,langue,medias:media_id(nom,type)")
       .order("heure_debut")
@@ -130,3 +131,4 @@ export default function ProgrammesPage() {
     </div>
   )
 }
+

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useParams, useRouter } from "next/navigation"
 import { Search, Filter, MapPin, Users, ExternalLink } from "lucide-react"
@@ -20,13 +20,14 @@ const TYPE_LABELS: Record<string, string> = {
 export default function MediaTypeListPage() {
   const { type } = useParams<{ type: string }>()
   const router = useRouter()
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [medias, setMedias] = useState<Media[]>([])
   const [search, setSearch] = useState("")
   const [filterCouverture, setFilterCouverture] = useState("tous")
   const [filterStatut, setFilterStatut] = useState("tous")
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     supabase.from("medias")
       .select("id,nom,type,statut,ville,couverture,langue,frequence,site_web,description,audience_estimee,numero_agrement,date_creation,groupes_media:groupe_id(nom)")
       .eq("type", type)

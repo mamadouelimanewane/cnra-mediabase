@@ -1,6 +1,6 @@
-"use client"
+﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Tv, Radio, Globe, MapPin, Building2, Users } from "lucide-react"
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis } from "recharts"
@@ -13,10 +13,11 @@ interface Media {
 const COUVERTURE_COLORS = { nationale: "#1A3A6B", regionale: "#C9A84C", internationale: "#166534", locale: "#7c3aed" }
 
 export default function PaysagePage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [medias, setMedias] = useState<Media[]>([])
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     supabase.from("medias")
       .select("id,nom,type,statut,ville,couverture,langue,groupes_media:groupe_id(nom)")
       .order("nom")
@@ -184,3 +185,4 @@ export default function PaysagePage() {
     </div>
   )
 }
+

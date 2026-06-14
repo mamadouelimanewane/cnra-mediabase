@@ -1,6 +1,6 @@
-"use client"
+﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Search, Users, Award } from "lucide-react"
 
@@ -11,12 +11,13 @@ interface Journaliste {
 }
 
 export default function JournalistesPage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [journalistes, setJournalistes] = useState<Journaliste[]>([])
   const [search, setSearch] = useState("")
   const [filterSpecialite, setFilterSpecialite] = useState("tous")
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     supabase.from("journalistes")
       .select("id,prenom,nom,email,telephone,poste,specialite,carte_presse,date_accreditation,medias:media_id(nom,type)")
       .order("nom")
@@ -142,3 +143,4 @@ export default function JournalistesPage() {
     </div>
   )
 }
+

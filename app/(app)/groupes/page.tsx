@@ -1,6 +1,6 @@
-"use client"
+﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Building2, Globe, Tv, Radio, Users } from "lucide-react"
 
@@ -15,11 +15,12 @@ const TYPE_COLORS: Record<string, string> = {
 }
 
 export default function GroupesPage() {
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
   const [groupes, setGroupes] = useState<Groupe[]>([])
   const [counts, setCounts] = useState<Record<string, number>>({})
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     Promise.all([
       supabase.from("groupes_media").select("*").order("nom"),
       supabase.from("medias").select("groupe_id").not("groupe_id", "is", null),
@@ -110,3 +111,4 @@ export default function GroupesPage() {
     </div>
   )
 }
+
