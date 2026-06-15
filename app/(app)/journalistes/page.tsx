@@ -31,7 +31,7 @@ export default function JournalistesPage() {
       })
   }, [])
 
-  const specialites = ["tous", ...Array.from(new Set(journalistes.map(j => j.specialite).filter(Boolean)))]
+  const specialites = ["tous", ...Array.from(new Set(journalistes.map(j => j.specialite).filter((s): s is string => Boolean(s))))]
 
   const filtered = journalistes.filter(j => {
     const name = `${j.prenom} ${j.nom}`.toLowerCase()

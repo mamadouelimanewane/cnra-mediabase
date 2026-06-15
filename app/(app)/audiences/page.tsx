@@ -99,7 +99,7 @@ export default function AudiencesPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
               <XAxis dataKey="name" tick={{ fontSize: 10 }} />
               <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v: number) => [`${v}k`]} />
+              <Tooltip formatter={(v) => [`${v}k`]} />
               <Bar dataKey="val" radius={[4, 4, 0, 0]} name="Audience (k)">
                 {topMedias.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Bar>
@@ -115,7 +115,7 @@ export default function AudiencesPage() {
               <Pie data={partsData} cx="50%" cy="50%" outerRadius={75} dataKey="part" nameKey="name">
                 {partsData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => [`${v}%`]} />
+              <Tooltip formatter={(v) => [`${v}%`]} />
             </PieChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-2 mt-2 justify-center">
@@ -138,7 +138,7 @@ export default function AudiencesPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
               <XAxis dataKey="label" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v: number) => [`${v}k`]} />
+              <Tooltip formatter={(v) => [`${v}k`]} />
               <Line type="monotone" dataKey="total" stroke="#1A3A6B" strokeWidth={2.5} dot={{ r: 4 }} name="Audience cumulée (k)" />
             </LineChart>
           </ResponsiveContainer>

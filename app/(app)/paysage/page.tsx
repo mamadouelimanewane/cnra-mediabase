@@ -21,7 +21,7 @@ export default function PaysagePage() {
     supabase.from("medias")
       .select("id,nom,type,statut,ville,couverture,langue,groupes_media:groupe_id(nom)")
       .order("nom")
-      .then(r => setMedias((r.data ?? []) as Media[]))
+      .then(r => setMedias((r.data ?? []) as unknown as Media[]))
   }, [])
 
   const byType = [

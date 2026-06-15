@@ -32,7 +32,7 @@ export default function MediaTypeListPage() {
       .select("id,nom,type,statut,ville,couverture,langue,frequence,site_web,description,audience_estimee,numero_agrement,date_creation,groupes_media:groupe_id(nom)")
       .eq("type", type)
       .order("nom")
-      .then(r => setMedias((r.data ?? []) as Media[]))
+      .then(r => setMedias((r.data ?? []) as unknown as Media[]))
   }, [type])
 
   const filtered = medias.filter(m => {

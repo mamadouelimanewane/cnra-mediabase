@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
@@ -32,7 +32,7 @@ export default function DashboardPage() {
       console.log("audiences:", a.data, a.error)
       console.log("journalistes count:", j.count, j.error)
       console.log("groupes count:", g.count, g.error)
-      setMedias((m.data ?? []) as Media[])
+      setMedias((m.data ?? []) as unknown as Media[])
       setAudiences((a.data ?? []).map((d: Record<string, unknown>) => ({
         media_nom: (d.media_nom as { nom: string })?.nom ?? "?",
         audience_hebdo: d.audience_hebdo as number,
@@ -52,7 +52,7 @@ export default function DashboardPage() {
   const totalAudience = medias.reduce((s, m) => s + (m.audience_estimee ?? 0), 0)
 
   const repartitionData = [
-    { name: "Télévision", value: tv.length, color: "#1A3A6B" },
+    { name: "TÃ©lÃ©vision", value: tv.length, color: "#1A3A6B" },
     { name: "Radio", value: radio.length, color: "#C9A84C" },
     { name: "En ligne", value: online.length, color: "#166534" },
   ]
@@ -68,21 +68,21 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-gray-900">Tableau de bord</h1>
-          <p className="text-gray-500 text-sm mt-1">Paysage médiatique sénégalais — Vue d&apos;ensemble</p>
+          <p className="text-gray-500 text-sm mt-1">Paysage mÃ©diatique sÃ©nÃ©galais â€” Vue d&apos;ensemble</p>
         </div>
         <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-xl border border-green-100">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-sm font-semibold">Base à jour — {new Date().toLocaleDateString("fr-FR")}</span>
+          <span className="text-sm font-semibold">Base Ã  jour â€” {new Date().toLocaleDateString("fr-FR")}</span>
         </div>
       </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Médias actifs", value: actifs.length, icon: Tv, color: "bg-blue-50 text-[#1A3A6B]", sub: `sur ${medias.length} enregistrés` },
-          { label: "Audience cumulée", value: formatNumber(totalAudience), icon: TrendingUp, color: "bg-green-50 text-green-700", sub: "téléspectateurs/auditeurs" },
-          { label: "Journalistes", value: nbJournalistes, icon: Users, color: "bg-purple-50 text-purple-700", sub: "accrédités CNRA" },
-          { label: "Groupes médias", value: nbGroupes, icon: Building2, color: "bg-amber-50 text-amber-700", sub: "conglomérats recensés" },
+          { label: "MÃ©dias actifs", value: actifs.length, icon: Tv, color: "bg-blue-50 text-[#1A3A6B]", sub: `sur ${medias.length} enregistrÃ©s` },
+          { label: "Audience cumulÃ©e", value: formatNumber(totalAudience), icon: TrendingUp, color: "bg-green-50 text-green-700", sub: "tÃ©lÃ©spectateurs/auditeurs" },
+          { label: "Journalistes", value: nbJournalistes, icon: Users, color: "bg-purple-50 text-purple-700", sub: "accrÃ©ditÃ©s CNRA" },
+          { label: "Groupes mÃ©dias", value: nbGroupes, icon: Building2, color: "bg-amber-50 text-amber-700", sub: "conglomÃ©rats recensÃ©s" },
         ].map(k => (
           <div key={k.label} className={`rounded-2xl p-5 ${k.color.split(" ")[0]}`}>
             <k.icon className={`size-7 mb-3 ${k.color.split(" ")[1]}`} />
@@ -96,9 +96,9 @@ export default function DashboardPage() {
       {/* Sous-KPIs par type */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Télévisions", value: tv.length, icon: Tv, color: "#1A3A6B" },
+          { label: "TÃ©lÃ©visions", value: tv.length, icon: Tv, color: "#1A3A6B" },
           { label: "Radios", value: radio.length, icon: Radio, color: "#C9A84C" },
-          { label: "Médias en ligne", value: online.length, icon: Globe, color: "#166534" },
+          { label: "MÃ©dias en ligne", value: online.length, icon: Globe, color: "#166534" },
         ].map(k => (
           <div key={k.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: k.color + "15" }}>
@@ -114,25 +114,25 @@ export default function DashboardPage() {
 
       {/* Charts */}
       <div className="grid grid-cols-3 gap-6">
-        {/* Audience top médias */}
+        {/* Audience top mÃ©dias */}
         <div className="col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h3 className="font-bold text-gray-900 mb-5">Top audiences (milliers, T3 2024)</h3>
-          {loading ? <div className="h-48 flex items-center justify-center text-gray-400">Chargement…</div> : (
+          {loading ? <div className="h-48 flex items-center justify-center text-gray-400">Chargementâ€¦</div> : (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={audienceData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number) => [`${v}k auditeurs/téléspectateurs`]} />
+                <Tooltip formatter={(v) => [`${v}k auditeurs/tÃ©lÃ©spectateurs`]} />
                 <Bar dataKey="audience" fill="#1A3A6B" radius={[4, 4, 0, 0]} name="Audience (k)" />
               </BarChart>
             </ResponsiveContainer>
           )}
         </div>
 
-        {/* Répartition par type */}
+        {/* RÃ©partition par type */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <h3 className="font-bold text-gray-900 mb-4">Répartition par type</h3>
+          <h3 className="font-bold text-gray-900 mb-4">RÃ©partition par type</h3>
           <ResponsiveContainer width="100%" height={150}>
             <PieChart>
               <Pie data={repartitionData} cx="50%" cy="50%" outerRadius={65} dataKey="value">
@@ -155,10 +155,10 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Parts de marché */}
+      {/* Parts de marchÃ© */}
       {audienceData.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <h3 className="font-bold text-gray-900 mb-5">Parts de marché — T3 2024 (%)</h3>
+          <h3 className="font-bold text-gray-900 mb-5">Parts de marchÃ© â€” T3 2024 (%)</h3>
           <div className="space-y-3">
             {audiences.sort((a, b) => b.parts_marche - a.parts_marche).map(a => (
               <div key={a.media_nom} className="flex items-center gap-4">
@@ -176,3 +176,4 @@ export default function DashboardPage() {
     </div>
   )
 }
+
